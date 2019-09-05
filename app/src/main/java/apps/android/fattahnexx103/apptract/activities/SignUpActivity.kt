@@ -9,11 +9,16 @@ import android.widget.Toast
 import apps.android.fattahnexx103.apptract.R
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import util.DATA_USERS
+import util.UserData
 
 class SignUpActivity : AppCompatActivity() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private val firebaseDatabase = FirebaseDatabase.getInstance().reference
+
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
 
         //check user
@@ -49,6 +54,13 @@ class SignUpActivity : AppCompatActivity() {
                     if(!task.isSuccessful){
                         //if task is not successful then give an error
                         Toast.makeText(this, "Sign up Failed .. ${task.exception?.localizedMessage}",Toast.LENGTH_SHORT).show()
+                    }else{
+                        //if signup is successful
+                        val email = editText_email.text.toString()
+                        val userId = firebaseAuth.currentUser?.uid ?: "" //if value is null take empty string
+
+                        val user = UserData(userId, "","",email,"","","")
+                        firebaseDatabase.child(DATA_USERS).child(userId).setValue(user) //data_user has the value from the util package
                     }
                 }
         }
