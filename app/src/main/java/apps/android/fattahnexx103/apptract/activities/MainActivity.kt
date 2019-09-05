@@ -1,5 +1,7 @@
 package apps.android.fattahnexx103.apptract.activities
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -59,5 +61,12 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+    }
+
+
+    //static function
+    companion object {
+        //if it returns only one thing
+        fun newIntent(context: Context?) =  Intent(context, MainActivity::class.java)
     }
 }

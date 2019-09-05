@@ -5,6 +5,44 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
         tools:context=".activities.LoginActivity">
+
+    <EditText android:layout_width="250dp"
+              android:id="@+id/editText_email"
+              android:hint="Email"
+              android:layout_marginTop="8dp"
+              android:inputType="textEmailAddress"
+              android:layout_height="50dp"
+              app:layout_constraintEnd_toEndOf="parent"
+              android:layout_marginEnd="8dp"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginStart="8dp"
+              app:layout_constraintTop_toTopOf="parent"/>
+
+    <EditText android:layout_width="250dp"
+              android:layout_height="50dp"
+              android:hint="Password"
+              android:id="@+id/editText_password"
+              android:inputType="textPassword"
+              android:layout_marginTop="8dp"
+              app:layout_constraintTop_toBottomOf="@+id/editText_email"
+              app:layout_constraintEnd_toEndOf="parent"
+              android:layout_marginEnd="8dp"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginStart="16dp"/>
+
+    <Button android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="Log In"
+            style="@style/StandardButton"
+            android:id="@+id/btn_loginS_login"
+            android:onClick="onLogin"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/editText_password"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

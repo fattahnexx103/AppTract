@@ -13,10 +13,10 @@ class StartActivity : AppCompatActivity() {
     }
 
     fun onLogIn(view: View){
-
+        startActivity(LoginActivity.newIntent(this))
     }
 
     fun onSignup(view: View){
-
+        startActivity(SignUpActivity.newIntent(this))
     }
 }
