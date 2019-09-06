@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.TableLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import apps.android.fattahnexx103.apptract.R
 import com.google.android.material.tabs.TabLayout
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
@@ -19,19 +21,16 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class HomeActivity : AppCompatActivity() {
 
-    //declare the fragments
+    //declare the fragments (initially we set them to null)
     private var profileFragment: ProfileFragment? = null
     private var swipeFragment: SwipeFragment? = null
     private var matchesFragment: MatchesFragment? = null
 
-    //create 3 tabs
+    //create 3 tabs (Initially we set them to null)
     private var profileTab: TabLayout.Tab? = null
     private var  swipeTab: TabLayout.Tab? = null
     private var matchesTab: TabLayout.Tab? = null
 
-//    private var al = ArrayList<String>()
-//    private var arrayAdapter: ArrayAdapter<String>? = null
-//    private var i = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,46 +51,52 @@ class HomeActivity : AppCompatActivity() {
         home_tabLay.addTab(swipeTab!!)
         home_tabLay.addTab(matchesTab!!)
 
-//        al.add("php");
-//        al.add("c");
-//        al.add("python");
-//        al.add("java");
-//
-//        //choose your favorite adapter
-//        arrayAdapter = ArrayAdapter(this,
-//            R.layout.item,
-//            R.id.helloText, al);
-//
-//        //set the listener and the adapter
-//        frame_swipe.setAdapter(arrayAdapter);
-//        frame_swipe.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
-//            override fun removeFirstObjectInAdapter() {
-//                Log.d("LIST", "removed object!");
-//                al.removeAt(0);
-//                arrayAdapter?.notifyDataSetChanged();
-//            }
-//
-//            override fun onLeftCardExit(p0: Any?) {
-//                Toast.makeText(this@HomeActivity, "Left!", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            override fun onRightCardExit(p0: Any?) {
-//                Toast.makeText(this@HomeActivity, "Right!", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            override fun onAdapterAboutToEmpty(p0: Int) {
-//                al.add("XML  is $i");
-//                arrayAdapter?.notifyDataSetChanged();
-//                Log.d("LIST", "notified");
-//                i++;
-//            }
-//
-//            override fun onScroll(p0: Float) {
-//
-//            }
-//
-//        })
+        home_tabLay.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                onTabSelected(tab)
+            }
 
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab){ //switch statement of the tab
+                    profileTab ->{ //if tab is profileTab
+                        //if its not created
+                        if(profileFragment == null){
+                            profileFragment = ProfileFragment()
+                        }
+                        replaceFragment(profileFragment!!)
+                    }
+                    swipeTab ->{
+                        if(swipeFragment == null){
+                            swipeFragment = SwipeFragment()
+                        }
+                        replaceFragment(swipeFragment!!)
+
+                    }
+                    matchesTab ->{
+                        if(matchesFragment == null){
+                            matchesFragment = MatchesFragment()
+                        }
+                        replaceFragment(matchesFragment!!)
+                    }
+                }
+            }
+
+        })
+
+        //set profileTab as first one selected
+        profileTab?.select()
+
+    }
+    //calls fragment manager to put the fragments layout in the fragment container
+    fun replaceFragment(fragment: Fragment){
+            val fragmentManager = supportFragmentManager
+            val transaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.home_linearLay, fragment) //replace the fragment in the layout with passed in fragment
+            transaction.commit()
     }
 
 
