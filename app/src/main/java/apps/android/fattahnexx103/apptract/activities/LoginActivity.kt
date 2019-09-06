@@ -18,7 +18,7 @@ class LoginActivity : AppCompatActivity() {
         val user = firebaseAuth.currentUser
 
         if(user != null){
-            startActivity(MainActivity.newIntent(this))
+            startActivity(HomeActivity.newIntent(this))
             finish()
         }
     }

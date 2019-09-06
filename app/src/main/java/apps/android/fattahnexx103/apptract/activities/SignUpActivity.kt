@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import apps.android.fattahnexx103.apptract.R
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -25,7 +24,7 @@ class SignUpActivity : AppCompatActivity() {
         val user = firebaseAuth.currentUser
         if(user != null){
             //this is in listener because this always checks in the status so user can auto log in
-            startActivity(MainActivity.newIntent(this)) //redirects back to Mainactivity
+            startActivity(HomeActivity.newIntent(this)) //redirects back to Mainactivity
             finish() //finish current activity
         }
     }
