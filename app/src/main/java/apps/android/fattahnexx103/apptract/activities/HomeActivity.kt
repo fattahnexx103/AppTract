@@ -13,13 +13,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import apps.android.fattahnexx103.apptract.R
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import fragments.MatchesFragment
 import fragments.ProfileFragment
 import fragments.SwipeFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import util.DATA_USERS
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), TinderCallback {
 
     //declare the fragments (initially we set them to null)
     private var profileFragment: ProfileFragment? = null
@@ -31,10 +35,21 @@ class HomeActivity : AppCompatActivity() {
     private var  swipeTab: TabLayout.Tab? = null
     private var matchesTab: TabLayout.Tab? = null
 
+    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val userId = firebaseAuth.currentUser?.uid //user id  may be null
+    private lateinit var userDatabase: DatabaseReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //check whther user is there
+        if(userId.isNullOrEmpty()){
+            onSignOut() //signOut since there is no user
+        }
+
+        userDatabase = FirebaseDatabase.getInstance().reference.child(DATA_USERS) //get a ref to database
 
         //create the tabs in the tablayout
         profileTab = home_tabLay.newTab()
@@ -66,12 +81,14 @@ class HomeActivity : AppCompatActivity() {
                         //if its not created
                         if(profileFragment == null){
                             profileFragment = ProfileFragment()
+                            profileFragment!!.setCallBack(this@HomeActivity)
                         }
                         replaceFragment(profileFragment!!)
                     }
                     swipeTab ->{
                         if(swipeFragment == null){
                             swipeFragment = SwipeFragment()
+                            swipeFragment!!.setCallBack(this@HomeActivity)
                         }
                         replaceFragment(swipeFragment!!)
 
@@ -79,6 +96,7 @@ class HomeActivity : AppCompatActivity() {
                     matchesTab ->{
                         if(matchesFragment == null){
                             matchesFragment = MatchesFragment()
+                            swipeFragment!!.setCallBack(this@HomeActivity)
                         }
                         replaceFragment(matchesFragment!!)
                     }
@@ -99,10 +117,26 @@ class HomeActivity : AppCompatActivity() {
             transaction.commit()
     }
 
+    override fun onSignOut() {
+        //sign out the user
+        firebaseAuth.signOut()
+        startActivity(StartActivity.newIntent(this)) //redirect to startup activity
+        finish()
+    }
+
+    override fun onGetUserID(): String {
+        return userId!!
+    }
+
+    override fun getUserDatabase(): DatabaseReference {
+        return userDatabase!!
+    }
 
     //static function
     companion object {
         //if it returns only one thing
         fun newIntent(context: Context?) =  Intent(context, HomeActivity::class.java)
     }
+
+
 }

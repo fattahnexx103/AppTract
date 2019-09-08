@@ -8,9 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 
 import apps.android.fattahnexx103.apptract.R
+import apps.android.fattahnexx103.apptract.activities.TinderCallback
+import com.google.firebase.database.DatabaseReference
 
 
 class ProfileFragment : Fragment() {
+
+    //lateInit means we will instantiate it before we use it
+    private lateinit var userId: String
+    private lateinit var dataBase: DatabaseReference
+    private var tinderCallback: TinderCallback? = null
+
+    fun setCallBack(tinderCallback :TinderCallback){
+        this.tinderCallback = tinderCallback
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

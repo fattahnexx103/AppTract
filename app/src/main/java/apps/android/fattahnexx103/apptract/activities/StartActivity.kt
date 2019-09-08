@@ -1,5 +1,7 @@
 package apps.android.fattahnexx103.apptract.activities
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -18,5 +20,11 @@ class StartActivity : AppCompatActivity() {
 
     fun onSignup(view: View){
         startActivity(SignUpActivity.newIntent(this))
+    }
+
+    //static function
+    companion object {
+        //if it returns only one thing
+        fun newIntent(context: Context?) =  Intent(context, StartActivity::class.java)
     }
 }
