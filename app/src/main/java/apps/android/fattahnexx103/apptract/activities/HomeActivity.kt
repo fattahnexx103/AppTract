@@ -132,6 +132,10 @@ class HomeActivity : AppCompatActivity(), TinderCallback {
         return userDatabase!!
     }
 
+    override fun profileComplete() {
+        swipeTab?.select() //this means swipe to the next tab
+    }
+
     //static function
     companion object {
         //if it returns only one thing
