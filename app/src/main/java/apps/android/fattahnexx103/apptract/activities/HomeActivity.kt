@@ -81,7 +81,7 @@ class HomeActivity : AppCompatActivity(), TinderCallback {
                         //if its not created
                         if(profileFragment == null){
                             profileFragment = ProfileFragment()
-                            profileFragment!!.setCallBack(this@HomeActivity)
+                            profileFragment!!.setCallBack(this@HomeActivity) //setting the callback to pass data into the fragment
                         }
                         replaceFragment(profileFragment!!)
                     }
