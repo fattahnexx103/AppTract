@@ -1,16 +1,21 @@
 package fragments
 
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.getSystemService
 
 import apps.android.fattahnexx103.apptract.R
 import apps.android.fattahnexx103.apptract.activities.TinderCallback
+import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -43,9 +48,14 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN) //hide the keyboard
         profile_progressBar_ll.setOnTouchListener{view, event-> true} //this has returned true so we dont want the progressbar layout
 
+
         populateInfo()
+
+        profile_photo.setOnClickListener { tinderCallback?.startActivityforPhoto() }
 
         profile_apply_btn.setOnClickListener{onApply()} //call the onApply function inside the onCLick
         profile_signout_btn.setOnClickListener{tinderCallback?.onSignOut()}
@@ -80,6 +90,9 @@ class ProfileFragment : Fragment() {
                     if(user?.preferredGender == GENDER_FEMALE){
                         radio_btn_preffered_woman.isChecked =true
                     }
+                    if(!user?.imageUrl.isNullOrEmpty()){
+                        populateImage(user?.imageUrl!!)
+                    }
                     profile_progressBar_ll.visibility = View.GONE
                 }
             }
@@ -113,6 +126,7 @@ class ProfileFragment : Fragment() {
                 preferredGender = GENDER_FEMALE
             }
 
+
             //updateValues to database
             dataBase.child(DATA_NAME).setValue(name)
             dataBase.child(DATA_EMAIL).setValue(email)
@@ -122,6 +136,19 @@ class ProfileFragment : Fragment() {
 
             tinderCallback?.profileComplete() //marking profile complete
         }
+    }
+
+    fun updateImageUri(uri: String){
+        dataBase.child(DATA_IMAGE_URL).setValue(uri)
+        populateImage(uri.toString())
+
+    }
+
+    fun populateImage(uri: String){
+        //using glide to load the photo from the database into the view
+        Glide.with(this)
+            .load(uri)
+            .into(profile_photo)
     }
 
 

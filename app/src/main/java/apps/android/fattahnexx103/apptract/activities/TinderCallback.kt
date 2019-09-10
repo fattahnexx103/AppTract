@@ -11,4 +11,6 @@ interface TinderCallback {
     fun getUserDatabase() : DatabaseReference //will gi ve database reference
 
     fun profileComplete()
+
+    fun startActivityforPhoto()
 }
