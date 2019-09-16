@@ -17,8 +17,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import kotlinx.android.synthetic.main.fragment_swipe.*
-import util.DATA_GENDER
-import util.UserData
+import util.*
 
 
 class SwipeFragment : Fragment() {
@@ -87,7 +86,9 @@ class SwipeFragment : Fragment() {
     }
 
     fun populateItems(){
-        val cardsQuery = database.orderByChild(DATA_GENDER).equalTo(preferredGender)
+        swipe_noUser_ll.visibility = View.GONE
+        swipe_progress_layout.visibility = View.VISIBLE
+        val cardsQuery = database.orderByChild(DATA_GENDER).equalTo(preferredGender) //we query the database
         cardsQuery.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
@@ -95,10 +96,24 @@ class SwipeFragment : Fragment() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach{child ->
-                    var user = child.getValue(UserData::class.java)
-                    if(user != null){
-                        var showUser = false
+                    var user = child.getValue(UserData::class.java) //get the user
+                    if(user != null){ //if there is a user
+                        var showUser = true  //have been user
+                        if(child.child(DATA_SWIPES_LEFT).hasChild(userId)
+                            && child.child(DATA_SWIPES_RIGHT).hasChild(userId)
+                            && child.child(DATA_MATCHES).hasChild(userId)
+                        ){
+                            showUser = false
+                        }
+                        if(showUser){
+                            rowItems.add(user)
+                            cardsAdapter?.notifyDataSetChanged()
+                        }
                     }
+                }
+                swipe_progress_layout.visibility = View.GONE
+                if(rowItems.isEmpty()){ //if there are no users
+                    swipe_noUser_ll.visibility = View.VISIBLE
                 }
             }
         })
