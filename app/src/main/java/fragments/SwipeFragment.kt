@@ -46,8 +46,6 @@ class SwipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cardsAdapter = CardsAdapter(context,R.layout.item, rowItems )
-
         database.child(userId).addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
 
@@ -60,17 +58,24 @@ class SwipeFragment : Fragment() {
             }
         })
 
-        swipe_Fling.adapter = cardsAdapter
-        swipe_Fling.setFlingListener(object: SwipeFlingAdapterView.onFlingListener{
-            override fun removeFirstObjectInAdapter() {
+        cardsAdapter = CardsAdapter(context,R.layout.item, rowItems )
 
+
+        frame.adapter = cardsAdapter
+        frame.setFlingListener(object: SwipeFlingAdapterView.onFlingListener{
+            override fun removeFirstObjectInAdapter() {
+                //rowItems.removeAt(0)
+                //cardsAdapter?.notifyDataSetChanged()
             }
 
             override fun onLeftCardExit(p0: Any?) {
-
+//                var user = p0 as UserData
+//                database.child(user.uid.toString()).child(DATA_SWIPES_LEFT).child(userId).setValue(true)
             }
 
             override fun onRightCardExit(p0: Any?) {
+//                val selectedUser = p0 as UserData
+//                val selectedUserId = selectedUser.uid
 
             }
 
@@ -86,8 +91,8 @@ class SwipeFragment : Fragment() {
     }
 
     fun populateItems(){
-        swipe_noUser_ll.visibility = View.GONE
-        swipe_progress_layout.visibility = View.VISIBLE
+        noUsersLayout.visibility = View.GONE
+        progressLayout.visibility = View.VISIBLE
         val cardsQuery = database.orderByChild(DATA_GENDER).equalTo(preferredGender) //we query the database
         cardsQuery.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
@@ -100,8 +105,8 @@ class SwipeFragment : Fragment() {
                     if(user != null){ //if there is a user
                         var showUser = true  //have been user
                         if(child.child(DATA_SWIPES_LEFT).hasChild(userId)
-                            && child.child(DATA_SWIPES_RIGHT).hasChild(userId)
-                            && child.child(DATA_MATCHES).hasChild(userId)
+                            || child.child(DATA_SWIPES_RIGHT).hasChild(userId)
+                            || child.child(DATA_MATCHES).hasChild(userId)
                         ){
                             showUser = false
                         }
@@ -111,58 +116,14 @@ class SwipeFragment : Fragment() {
                         }
                     }
                 }
-                swipe_progress_layout.visibility = View.GONE
+                progressLayout.visibility = View.GONE
                 if(rowItems.isEmpty()){ //if there are no users
-                    swipe_noUser_ll.visibility = View.VISIBLE
+                    noUsersLayout.visibility = View.VISIBLE
                 }
             }
         })
     }
 
-    //    private var al = ArrayList<String>()
-//    private var arrayAdapter: ArrayAdapter<String>? = null
-//    private var i = 0
-
-
-    //        al.add("php");
-//        al.add("c");
-//        al.add("python");
-//        al.add("java");
-//
-//        //choose your favorite adapter
-//        arrayAdapter = ArrayAdapter(this,
-//            R.layout.item,
-//            R.id.helloText, al);
-//
-//        //set the listener and the adapter
-//        frame_swipe.setAdapter(arrayAdapter);
-//        frame_swipe.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
-//            override fun removeFirstObjectInAdapter() {
-//                Log.d("LIST", "removed object!");
-//                al.removeAt(0);
-//                arrayAdapter?.notifyDataSetChanged();
-//            }
-//
-//            override fun onLeftCardExit(p0: Any?) {
-//                Toast.makeText(this@HomeActivity, "Left!", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            override fun onRightCardExit(p0: Any?) {
-//                Toast.makeText(this@HomeActivity, "Right!", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            override fun onAdapterAboutToEmpty(p0: Int) {
-//                al.add("XML  is $i");
-//                arrayAdapter?.notifyDataSetChanged();
-//                Log.d("LIST", "notified");
-//                i++;
-//            }
-//
-//            override fun onScroll(p0: Float) {
-//
-//            }
-//
-//        })
 
 
 }
