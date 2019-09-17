@@ -28,7 +28,7 @@
         />
 
         <LinearLayout
-                android:id="@+id/item_profileClick_ll"
+                android:id="@+id/userInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="#aaaaaaaa"

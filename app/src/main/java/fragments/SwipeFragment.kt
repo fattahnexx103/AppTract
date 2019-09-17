@@ -102,6 +102,7 @@ class SwipeFragment : Fragment() {
 
             }
 
+
             override fun onAdapterAboutToEmpty(p0: Int) {
 
             }
@@ -110,6 +111,10 @@ class SwipeFragment : Fragment() {
 
             }
         })
+
+        frame.setOnItemClickListener{position, data ->
+
+        }
 
         likeButton.setOnClickListener {
             if(!rowItems.isEmpty()){
