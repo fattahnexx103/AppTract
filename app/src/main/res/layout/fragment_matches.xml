@@ -4,10 +4,11 @@
              android:layout_height="match_parent"
              tools:context="fragments.MatchesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/matches_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="MATCHES "/>
+            android:scrollbars="vertical"
+            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
 
 </FrameLayout>

@@ -9,14 +9,22 @@ import android.view.ViewGroup
 
 import apps.android.fattahnexx103.apptract.R
 import apps.android.fattahnexx103.apptract.activities.TinderCallback
+import com.google.firebase.database.DatabaseReference
 
 
 class MatchesFragment : Fragment() {
+
+    private lateinit var userId: String
+    private lateinit var database: DatabaseReference
+    private lateinit var chatdatabase: DatabaseReference
 
     private var tinderCallback: TinderCallback? = null
 
     fun setCallBack(tinderCallback : TinderCallback){
         this.tinderCallback = tinderCallback
+        userId = tinderCallback.onGetUserID()
+        database = tinderCallback.getUserDatabase()
+        chatdatabase = tinderCallback.getChatDatabase()
     }
 
     override fun onCreateView(

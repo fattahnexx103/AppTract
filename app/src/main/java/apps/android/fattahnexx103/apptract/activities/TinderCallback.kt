@@ -8,6 +8,8 @@ interface TinderCallback {
 
     fun onGetUserID(): String //will return string
 
+    fun getChatDatabase() : DatabaseReference
+
     fun getUserDatabase() : DatabaseReference //will gi ve database reference
 
     fun profileComplete()

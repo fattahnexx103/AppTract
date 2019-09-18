@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.ArrayAdapter
@@ -28,6 +29,7 @@ import fragments.ProfileFragment
 import fragments.SwipeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import util.DATA_CHATS
 import util.DATA_IMAGE_URL
 import util.DATA_USERS
 import java.io.ByteArrayOutputStream
@@ -36,6 +38,7 @@ import java.io.IOException
 const val REQUEST_CODE_PHOTO = 11
 
 class HomeActivity : AppCompatActivity(), TinderCallback {
+
 
     //declare the fragments (initially we set them to null)
     private var profileFragment: ProfileFragment? = null
@@ -51,6 +54,7 @@ class HomeActivity : AppCompatActivity(), TinderCallback {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser?.uid //user id  may be null
     private lateinit var userDatabase: DatabaseReference
+    private lateinit var chatdatabase: DatabaseReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +67,7 @@ class HomeActivity : AppCompatActivity(), TinderCallback {
         }
 
         userDatabase = FirebaseDatabase.getInstance().reference.child(DATA_USERS) //get a ref to database
+        chatdatabase = FirebaseDatabase.getInstance().reference.child(DATA_CHATS)
 
         //create the tabs in the tablayout
         profileTab = home_tabLay.newTab()
@@ -143,6 +148,10 @@ class HomeActivity : AppCompatActivity(), TinderCallback {
 
     override fun getUserDatabase(): DatabaseReference {
         return userDatabase!!
+    }
+
+    override fun getChatDatabase(): DatabaseReference {
+        return chatdatabase
     }
 
     override fun profileComplete() {
