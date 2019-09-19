@@ -3,7 +3,6 @@ package fragments
 
 import adapters.CardsAdapter
 import android.os.Bundle
-import android.renderscript.Sampler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,17 +23,24 @@ import util.*
 
 class SwipeFragment : Fragment() {
 
-    private var tinderCallback: TinderCallback? = null
-    private lateinit var userId: String
-    private lateinit var database: DatabaseReference
-    private var cardsAdapter: ArrayAdapter<UserData>? =null
-    private var rowItems = ArrayList<UserData>()
-    private var preferredGender: String? = null
+    private var tinderCallback: TinderCallback? = null //callback to get database ref, user
+    private lateinit var userId: String //the user id
+    private lateinit var database: DatabaseReference // reference to database
+    private var cardsAdapter: ArrayAdapter<UserData>? =null //this is to instantiate the cardsAdapter
+    private var rowItems = ArrayList<UserData>() //arrayList of users
+    private var preferredGender: String? = null //preferred gender
+    private var userName: String? = null //user name for matching purposes
+    private var userImageUrl: String? =null //user imageUrl for matching purposes
+
+    private lateinit var  chatDatabase: DatabaseReference
 
     fun setCallBack(tinderCallback : TinderCallback){
-        this.tinderCallback = tinderCallback
-        userId = tinderCallback.onGetUserID()
-        database = tinderCallback.getUserDatabase()
+        this.tinderCallback = tinderCallback //initiate callback
+        userId = tinderCallback.onGetUserID() //get user id and assign to userId
+        database = tinderCallback.getUserDatabase() //get user database and assign to database
+        chatDatabase = tinderCallback.getChatDatabase() //get chat user database and assign to database
+
+        //we have 2 databases in backend under same reference. one is named user and the other is chats
     }
 
     override fun onCreateView(
@@ -56,6 +62,8 @@ class SwipeFragment : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
                 val user = p0.getValue(UserData::class.java)
                 preferredGender = user?.preferredGender
+                userName = user?.name
+                userImageUrl =user?.imageUrl
                 populateItems()
             }
         })
@@ -89,10 +97,25 @@ class SwipeFragment : Fragment() {
 
                             override fun onDataChange(p0: DataSnapshot) {
                                if(p0.hasChild(selectedUserId)){ //we check if the other user already swiped on this person
-                                   Toast.makeText(context, "MATCH", Toast.LENGTH_SHORT).show()
-                                   database.child(userId).child(DATA_SWIPES_RIGHT).child(selectedUserId).removeValue()
-                                   database.child(userId).child(DATA_MATCHES).child(selectedUserId).setValue(true)
-                                   database.child(selectedUserId).child(DATA_MATCHES).child(userId).setValue(true)
+
+                                   //need to create chat key and add the user to chat database
+                                   val chatKey = chatDatabase.push().key // just generates a key
+
+                                   if(chatKey != null) {
+                                       Toast.makeText(context, "MATCH", Toast.LENGTH_SHORT).show()
+                                       database.child(userId).child(DATA_SWIPES_RIGHT).child(selectedUserId)
+                                           .removeValue()
+                                       database.child(userId).child(DATA_MATCHES).child(selectedUserId)
+                                           .setValue(chatKey)
+                                       database.child(selectedUserId).child(DATA_MATCHES).child(userId)
+                                           .setValue(chatKey)
+
+                                       chatDatabase.child(chatKey).child(userId).child(DATA_NAME).setValue(userName)
+                                       chatDatabase.child(chatKey).child(userId).child(DATA_IMAGE_URL).setValue(userImageUrl)
+
+                                       chatDatabase.child(chatKey).child(selectedUserId).child(DATA_NAME).setValue(selectedUser.name)
+                                       chatDatabase.child(chatKey).child(selectedUserId).child(DATA_IMAGE_URL).setValue(selectedUser.imageUrl)
+                                   }
                                }else{
                                    database.child(selectedUserId).child(DATA_SWIPES_RIGHT).child(userId).setValue(true)
                                }

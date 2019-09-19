@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import apps.android.fattahnexx103.apptract.R
+import apps.android.fattahnexx103.apptract.activities.ChatActivity
 import com.bumptech.glide.Glide
 import util.Chat
 
@@ -24,6 +25,11 @@ class ChatsAdapter(private var chats: ArrayList<Chat>) : RecyclerView.Adapter<Ch
         holder.bind(chats[position])
     }
 
+    fun addElement(chat: Chat){
+        chats.add(chat)
+        notifyDataSetChanged()
+    }
+
     class ChatsViewHolder(private val view: View): RecyclerView.ViewHolder(view){
 
         private var layout = view.findViewById<View>(R.id.chats_constraintLayout)
@@ -38,7 +44,10 @@ class ChatsAdapter(private var chats: ArrayList<Chat>) : RecyclerView.Adapter<Ch
                     .into(image)
             }
 
-            layout.setOnClickListener {  }
+            layout.setOnClickListener {
+               val intent =  ChatActivity.newIntent(view.context, chat.chatId, chat.userId, chat.imageUrl, chat.otherUserId)
+                view.context.startActivity(intent)
+            }
         }
     }
 }

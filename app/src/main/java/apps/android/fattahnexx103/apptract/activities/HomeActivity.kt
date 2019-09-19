@@ -114,7 +114,7 @@ class HomeActivity : AppCompatActivity(), TinderCallback {
                     matchesTab ->{
                         if(matchesFragment == null){
                             matchesFragment = MatchesFragment()
-                            swipeFragment!!.setCallBack(this@HomeActivity)
+                            matchesFragment!!.setCallBack(this@HomeActivity)
                         }
                         replaceFragment(matchesFragment!!)
                     }
