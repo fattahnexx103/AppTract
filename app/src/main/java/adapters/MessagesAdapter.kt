@@ -28,6 +28,11 @@ class MessagesAdapter(private var messages: ArrayList<Message>, val userId: Stri
         return messages.size
     }
 
+    fun addMessage(message: Message){
+        messages.add(message)
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         holder.bind(messages[position])
     }
@@ -42,7 +47,7 @@ class MessagesAdapter(private var messages: ArrayList<Message>, val userId: Stri
 
     class MessageViewHolder(private val view: View): RecyclerView.ViewHolder(view){
         fun bind(message: Message){
-            view.findViewById<TextView>(R.id.chat_name_textView).text = message.message
+            view.findViewById<TextView>(R.id.messageTV).text = message.message
         }
     }
 }
